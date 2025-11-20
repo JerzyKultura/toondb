@@ -8,6 +8,11 @@ Deploy ToonDB to production in minutes:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JerzyKultura/toondb)
 
+**Or use the interactive deploy script:**
+```bash
+./scripts/quick-deploy.sh
+```
+
 **Other hosting options:** [See HOSTING.md](./HOSTING.md) for detailed guides on Vercel, Netlify, Railway, Docker, and more.
 
 ## Features
