@@ -1,4 +1,5 @@
 import { createBrowserClient } from '@supabase/ssr';
+import { createClient } from '@supabase/supabase-js';
 import { Database } from './database.types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -12,7 +13,6 @@ export const supabase = createBrowserClient<Database>(supabaseUrl, supabaseAnonK
 
 // Server-side client with service role (use carefully!)
 export function getServiceRoleClient() {
-  const { createClient } = require('@supabase/supabase-js');
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   
   if (!serviceRoleKey) {
@@ -26,4 +26,3 @@ export function getServiceRoleClient() {
     },
   });
 }
-
