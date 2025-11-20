@@ -26,11 +26,11 @@ export async function POST(
     }
 
     // Get current table data
-    const { data: table, error: tableError } = await supabase
+    const { data: table, error: tableError } = await ((supabase as any)
       .from('toon_tables')
       .select('*')
       .eq('id', params.id)
-      .single();
+      .single());
 
     if (tableError || !table) {
       return NextResponse.json({ error: 'Table not found' }, { status: 404 });
@@ -50,7 +50,7 @@ export async function POST(
     const newRowCount = Math.max(0, table.row_count - result.deletedCount);
 
     // Save updated data back to database
-    const { error: updateError } = await supabase
+    const { error: updateError } = await ((supabase as any)
       .from('toon_tables')
       .update({
         data: result.newData,
@@ -58,7 +58,7 @@ export async function POST(
         row_count: newRowCount,
         updated_at: new Date().toISOString(),
       })
-      .eq('id', params.id);
+      .eq('id', params.id));
 
     if (updateError) {
       console.error('Error updating table:', updateError);

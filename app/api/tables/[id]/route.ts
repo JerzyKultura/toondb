@@ -9,11 +9,11 @@ export async function GET(
   try {
     const supabase = createServerClient();
     // Demo mode - no authentication required
-    const { data: table, error } = await supabase
+    const { data: table, error } = await ((supabase as any)
       .from('toon_tables')
       .select('*')
       .eq('id', params.id)
-      .single();
+      .single());
 
     if (error) {
       console.error('Database error:', error);
@@ -64,12 +64,12 @@ export async function PUT(
       }
     }
 
-    const { data: table, error } = await supabase
+    const { data: table, error } = await ((supabase as any)
       .from('toon_tables')
       .update(updateData)
       .eq('id', params.id)
       .select()
-      .single();
+      .single());
 
     if (error) {
       console.error('Database error:', error);
@@ -93,10 +93,10 @@ export async function DELETE(
   try {
     const supabase = createServerClient();
     // Demo mode - no authentication required
-    const { error } = await supabase
+    const { error } = await ((supabase as any)
       .from('toon_tables')
       .delete()
-      .eq('id', params.id);
+      .eq('id', params.id));
 
     if (error) {
       console.error('Database error:', error);

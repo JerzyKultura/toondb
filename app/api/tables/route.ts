@@ -7,11 +7,11 @@ export async function GET(request: NextRequest) {
     const supabase = createServerClient();
     // For now, return all public tables or use a demo mode
     // TODO: Add proper authentication
-    const { data: tables, error } = await supabase
+    const { data: tables, error } = await ((supabase as any)
       .from('toon_tables')
       .select('*')
       .order('created_at', { ascending: false })
-      .limit(100);
+      .limit(100));
 
     if (error) {
       console.error('Database error:', error);
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     const demoUserId = '00000000-0000-0000-0000-000000000000';
 
     // Insert table
-    const { data: table, error } = await supabase
+    const { data: table, error } = await ((supabase as any)
       .from('toon_tables')
       .insert({
         user_id: demoUserId,
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
         delimiter,
       })
       .select()
-      .single();
+      .single());
 
     if (error) {
       console.error('Database error:', error);
