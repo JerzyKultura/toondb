@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase/client';
+import { createServerClient } from '@/lib/supabase/server';
 import { decode, encode } from '@/lib/toon';
 
 export async function GET(
@@ -7,6 +7,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const supabase = createServerClient();
     // Demo mode - no authentication required
     const { data: table, error } = await supabase
       .from('toon_tables')
@@ -34,6 +35,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const supabase = createServerClient();
     // Demo mode - no authentication required
     const body = await request.json();
     const { name, description, toon_content, is_public } = body;
@@ -89,6 +91,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const supabase = createServerClient();
     // Demo mode - no authentication required
     const { error } = await supabase
       .from('toon_tables')
@@ -109,4 +112,3 @@ export async function DELETE(
     );
   }
 }
-

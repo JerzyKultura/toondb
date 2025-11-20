@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase/client';
+import { createServerClient } from '@/lib/supabase/server';
 import { queryTOONPath } from '@/lib/toon/toonpath';
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = createServerClient();
     // Demo mode - no authentication required
     const body = await request.json();
     const { table_id, query, data } = body;
@@ -102,4 +103,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase/client';
+import { createServerClient } from '@/lib/supabase/server';
 import { randomBytes, createHash } from 'crypto';
 
 function generateApiKey(): { key: string; hash: string; prefix: string } {
@@ -12,6 +12,7 @@ function generateApiKey(): { key: string; hash: string; prefix: string } {
 
 export async function GET() {
   try {
+    const supabase = createServerClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
@@ -39,6 +40,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = createServerClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
@@ -89,13 +91,12 @@ export async function POST(request: NextRequest) {
         p_metadata: { name },
       } as any);
     } catch (rpcError) {
-      // Ignore RPC errors for now
       console.error('Audit log error:', rpcError);
     }
 
     return NextResponse.json({
       api_key: apiKey,
-      key, // Only returned once!
+      key,
       warning: 'Save this key now. You won\'t be able to see it again.',
     }, { status: 201 });
   } catch (err) {

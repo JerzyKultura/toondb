@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase/client';
+import { createServerClient } from '@/lib/supabase/server';
 import { insertItem } from '@/lib/toon/data-manipulator';
 import { detectSchema, validateItem } from '@/lib/toon/schema-validator';
 
@@ -8,6 +8,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    const supabase = createServerClient();
     const body = await request.json();
     const { path, item, validate = true } = body;
 
@@ -114,4 +115,3 @@ export async function POST(
     );
   }
 }
-

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase/client';
+import { createServerClient } from '@/lib/supabase/server';
 import { decode } from '@/lib/toon';
 
 export async function GET(request: NextRequest) {
   try {
+    const supabase = createServerClient();
     // For now, return all public tables or use a demo mode
     // TODO: Add proper authentication
     const { data: tables, error } = await supabase
@@ -29,6 +30,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = createServerClient();
     const body = await request.json();
     const { name, description, toon_content, delimiter = ',' } = body;
 
@@ -117,4 +119,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
