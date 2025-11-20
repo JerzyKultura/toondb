@@ -36,3 +36,5 @@ yarn-error.log*
 # Supabase
 .supabase
 
+.env
+.env.example
