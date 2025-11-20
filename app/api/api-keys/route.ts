@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       expiresAt = date.toISOString();
     }
 
-    const { data: apiKey, error } = await supabase
+    const { data: apiKey, error } = await (supabase
       .from('api_keys')
       .insert({
         user_id: user.id,
@@ -74,9 +74,9 @@ export async function POST(request: NextRequest) {
         key_prefix: prefix,
         name,
         expires_at: expiresAt,
-      })
+      } as any)
       .select('id, name, key_prefix, expires_at, is_active, created_at')
-      .single();
+      .single() as any);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
