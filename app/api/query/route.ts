@@ -25,11 +25,11 @@ export async function POST(request: NextRequest) {
     // Normal mode: fetch from database
     else if (table_id) {
       // Get table data
-      const { data: table, error: tableError } = await supabase
+      const { data: table, error: tableError } = await (supabase
         .from('toon_tables')
         .select('*')
         .eq('id', table_id)
-        .single();
+        .single() as any);
 
       if (tableError || !table) {
         console.error('Table error:', tableError);
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
         result_rows: Array.isArray(results) ? results.length : 0,
         status,
         error_message,
-      });
+      } as any);
     }
 
     if (status === 'error') {
