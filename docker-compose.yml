@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  toondb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: toondb
+    ports:
+      - "3000:3000"
+    environment:
+      # Supabase Configuration (REQUIRED)
+      # Get these from: https://app.supabase.com/project/_/settings/api
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      
+      # App Configuration (OPTIONAL)
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      - NODE_ENV=production
+      
+    restart: unless-stopped
+    
+    # Uncomment for resource limits
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '1'
+    #       memory: 1G
+    #     reservations:
+    #       cpus: '0.5'
+    #       memory: 512M
+    
+    # Uncomment for logging configuration
+    # logging:
+    #   driver: "json-file"
+    #   options:
+    #     max-size: "10m"
+    #     max-file: "3"
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      start_period: 40s
+      retries: 3
+
+# Optional: Add networks for better isolation
+# networks:
+#   toondb-network:
+#     driver: bridge
+
+# Optional: Add volumes for persistence
+# volumes:
+#   toondb-data:
