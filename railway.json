@@ -1,0 +1,38 @@
+# Railway configuration for ToonDB
+# Docs: https://docs.railway.app/deploy/config-as-code
+
+version: "1.0"
+
+services:
+  toondb:
+    # Build configuration
+    build:
+      builder: nixpacks
+      buildCommand: npm run build
+    
+    # Start configuration  
+    startCommand: npm start
+    
+    # Environment variables
+    # Note: Set these in Railway dashboard under Variables tab
+    # - NEXT_PUBLIC_SUPABASE_URL
+    # - NEXT_PUBLIC_SUPABASE_ANON_KEY
+    # - SUPABASE_SERVICE_ROLE_KEY
+    
+    # Health check
+    healthcheck:
+      path: /api/health
+      interval: 30
+      timeout: 10
+      
+    # Resource limits (optional)
+    # resources:
+    #   memory: 1024
+    #   cpu: 1000
+    
+    # Restart policy
+    restartPolicy: always
+    
+    # Regions (choose closest to your users)
+    # Options: us-west1, us-east1, eu-west1, ap-south1
+    region: us-west1

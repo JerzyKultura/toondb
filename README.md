@@ -2,6 +2,19 @@
 
 A production-grade database platform optimized for AI/LLM projects using the TOON format for efficient token usage and cost savings.
 
+## 🚀 Quick Deploy
+
+Deploy ToonDB to production in minutes:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JerzyKultura/toondb)
+
+**Or use the interactive deploy script:**
+```bash
+./scripts/quick-deploy.sh
+```
+
+**Other hosting options:** [See HOSTING.md](./HOSTING.md) for detailed guides on Vercel, Netlify, Railway, Docker, and more.
+
 ## Features
 
 - **TOON Format Support**: Native encode/decode with 30-60% token savings
@@ -210,7 +223,14 @@ npm start
 
 ## Deployment
 
-### Vercel
+**📚 Complete Hosting Guide:** See [HOSTING.md](./HOSTING.md) for comprehensive deployment instructions including:
+- ⭐ Vercel (one-click deploy)
+- Netlify
+- Railway  
+- Docker / Self-hosting
+- And more platforms
+
+**Quick Deploy to Vercel:**
 
 ```bash
 # Install Vercel CLI
@@ -254,10 +274,11 @@ npx supabase functions deploy count-tokens
 
 ## Documentation
 
+- [🚀 Hosting Guide](./HOSTING.md) - **Deploy to production**
+- [Quick Start](./QUICKSTART.md) - Get started in 5 minutes
+- [Deployment Guide](./docs/DEPLOYMENT.md) - Detailed Vercel deployment
+- [API Reference](./docs/API.md)
 - [TOON Format Specification](https://github.com/toon-format/toon/blob/main/SPEC.md)
-- [API Reference](./docs/api-reference.md)
-- [SDK Documentation](./docs/sdk.md)
-- [Deployment Guide](./docs/deployment.md)
 - [Examples](./examples/)
 
 ## Examples
