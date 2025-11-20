@@ -1,0 +1,115 @@
+store:
+  name: TechHub Electronics
+  location: San Francisco, CA
+  established: 2018
+  rating: 4.7
+
+categories[5]: Electronics,Computers,Accessories,Audio,Gaming
+
+products[15]{id,name,category,price,inStock,rating,sales}:
+  1,UltraBook Pro 15,Computers,1299.99,true,4.8,245
+  2,Wireless Mouse X1,Accessories,29.99,true,4.5,892
+  3,USB-C Hub 7-in-1,Accessories,49.99,true,4.6,567
+  4,Gaming Keyboard RGB,Gaming,89.99,true,4.7,431
+  5,4K Monitor 27inch,Electronics,399.99,false,4.9,156
+  6,Laptop Stand Aluminum,Accessories,34.99,true,4.4,723
+  7,Noise Cancel Headphones,Audio,249.99,true,4.8,312
+  8,Mechanical Keyboard,Gaming,129.99,true,4.6,289
+  9,Webcam HD 1080p,Electronics,79.99,true,4.3,445
+  10,USB Cable 6ft,Accessories,12.99,true,4.2,1203
+  11,Gaming Mouse Pad XXL,Gaming,24.99,true,4.5,634
+  12,Bluetooth Speaker,Audio,89.99,true,4.7,521
+  13,External SSD 1TB,Electronics,149.99,true,4.9,398
+  14,Laptop Bag Premium,Accessories,59.99,true,4.6,267
+  15,Wireless Earbuds Pro,Audio,179.99,false,4.8,189
+
+customers[10]{id,name,email,memberSince,isPremium,totalSpent,orderCount}:
+  1,Alice Johnson,alice@email.com,2020-03-15,true,2847.50,12
+  2,Bob Smith,bob@email.com,2021-06-22,true,1523.75,8
+  3,Carol Davis,carol@email.com,2022-01-10,false,456.80,3
+  4,David Wilson,david@email.com,2019-11-03,true,3921.40,18
+  5,Emma Brown,emma@email.com,2023-02-28,false,189.99,2
+  6,Frank Miller,frank@email.com,2020-08-17,true,2156.30,11
+  7,Grace Lee,grace@email.com,2022-07-05,false,734.50,5
+  8,Henry Taylor,henry@email.com,2021-03-20,true,1890.25,9
+  9,Ivy Martinez,ivy@email.com,2023-05-12,false,299.99,1
+  10,Jack Anderson,jack@email.com,2019-09-08,true,4205.60,21
+
+orders[20]{id,customerId,productId,quantity,totalPrice,orderDate,status,shipped}:
+  1,1,7,1,249.99,2024-01-15,delivered,true
+  2,2,2,2,59.98,2024-01-16,delivered,true
+  3,3,10,3,38.97,2024-01-17,delivered,true
+  4,1,13,1,149.99,2024-01-18,delivered,true
+  5,4,1,1,1299.99,2024-01-19,delivered,true
+  6,5,3,1,49.99,2024-01-20,processing,false
+  7,2,8,1,129.99,2024-01-21,shipped,true
+  8,6,12,2,179.98,2024-01-22,delivered,true
+  9,7,6,1,34.99,2024-01-23,delivered,true
+  10,3,11,1,24.99,2024-01-24,processing,false
+  11,8,4,1,89.99,2024-01-25,shipped,true
+  12,1,15,1,179.99,2024-01-26,cancelled,false
+  13,9,2,1,29.99,2024-01-27,processing,false
+  14,4,7,1,249.99,2024-01-28,delivered,true
+  15,6,14,1,59.99,2024-01-29,delivered,true
+  16,10,1,1,1299.99,2024-01-30,delivered,true
+  17,2,9,1,79.99,2024-01-31,shipped,true
+  18,7,10,5,64.95,2024-02-01,delivered,true
+  19,5,11,1,24.99,2024-02-02,processing,false
+  20,8,13,1,149.99,2024-02-03,shipped,true
+
+reviews[12]{id,productId,customerId,rating,verified,reviewDate,helpful}:
+  1,7,1,5,true,2024-01-20,23
+  2,2,2,4,true,2024-01-22,15
+  3,13,4,5,true,2024-01-25,31
+  4,8,2,5,true,2024-01-28,18
+  5,6,7,4,true,2024-01-30,12
+  6,12,6,5,true,2024-02-01,27
+  7,4,8,5,true,2024-02-02,19
+  8,1,5,5,true,2024-02-04,42
+  9,7,4,5,true,2024-02-05,35
+  10,9,2,4,true,2024-02-06,8
+  11,10,7,4,true,2024-02-08,6
+  12,13,8,5,true,2024-02-09,29
+
+inventory[15]{productId,warehouse,quantity,lastRestocked,lowStockAlert}:
+  1,main,45,2024-01-10,false
+  2,main,230,2024-01-15,false
+  3,main,112,2024-01-12,false
+  4,main,78,2024-01-08,false
+  5,main,8,2024-01-05,true
+  6,main,156,2024-01-18,false
+  7,main,67,2024-01-14,false
+  8,main,91,2024-01-09,false
+  9,main,103,2024-01-16,false
+  10,main,445,2024-01-20,false
+  11,main,189,2024-01-11,false
+  12,main,134,2024-01-13,false
+  13,main,87,2024-01-17,false
+  14,main,95,2024-01-07,false
+  15,main,12,2024-01-06,true
+
+shipping[8]{region,baseRate,freeShippingThreshold,estimatedDays}:
+  West Coast,5.99,50,2
+  East Coast,7.99,50,3
+  Midwest,6.99,50,3
+  Southwest,6.49,50,2
+  Southeast,7.49,50,3
+  Mountain,8.99,75,4
+  Alaska,15.99,100,7
+  Hawaii,12.99,100,6
+
+promotions[5]{id,code,discount,minPurchase,active,expiresDate}:
+  1,SAVE10,10,50,true,2024-12-31
+  2,WELCOME15,15,75,true,2024-12-31
+  3,PREMIUM20,20,100,true,2024-12-31
+  4,FLASH25,25,150,false,2024-06-30
+  5,NEWYEAR30,30,200,true,2024-03-31
+
+analytics:
+  totalRevenue: 45678.90
+  averageOrderValue: 156.45
+  conversionRate: 3.2
+  topSellingCategory: Accessories
+  customerSatisfaction: 4.6
+  returnsRate: 2.1
+

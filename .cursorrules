@@ -1,0 +1,55 @@
+# ToonDB Development Rules
+
+## Code Style
+
+- Use TypeScript for all frontend/backend code
+- Use Python 3.8+ for SDK
+- Follow ESLint and Prettier configurations
+- Use functional components and hooks in React
+- Prefer async/await over promises
+
+## Database
+
+- Always use Row Level Security (RLS) policies
+- Use parameterized queries to prevent SQL injection
+- Index foreign keys and frequently queried columns
+- Use transactions for multi-step operations
+
+## API
+
+- Always validate input data
+- Return consistent error responses
+- Use HTTP status codes correctly
+- Include rate limiting headers
+- Log all errors with context
+
+## Security
+
+- Never commit secrets or API keys
+- Use environment variables for configuration
+- Validate and sanitize user input
+- Implement CSRF protection
+- Use HTTPS in production
+
+## Testing
+
+- Write tests for critical business logic
+- Test API endpoints with various inputs
+- Include error case testing
+- Mock external services
+
+## Performance
+
+- Minimize database queries
+- Use connection pooling
+- Implement caching where appropriate
+- Optimize bundle size
+- Use lazy loading for routes
+
+## Git
+
+- Write descriptive commit messages
+- Keep commits focused and atomic
+- Review your changes before committing
+- Don't commit generated files
+
