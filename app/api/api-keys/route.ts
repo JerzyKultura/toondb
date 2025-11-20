@@ -10,7 +10,7 @@ function generateApiKey(): { key: string; hash: string; prefix: string } {
   return { key, hash, prefix };
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ api_keys: apiKeys });
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -57,10 +57,11 @@ export async function POST(request: NextRequest) {
 
     const { key, hash, prefix } = generateApiKey();
     
-    let expiresAt = null;
+    let expiresAt: string | null = null;
     if (expires_in_days && expires_in_days > 0) {
-      expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + expires_in_days);
+      const date = new Date();
+      date.setDate(date.getDate() + expires_in_days);
+      expiresAt = date.toISOString();
     }
 
     const { data: apiKey, error } = await supabase
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest) {
         key_hash: hash,
         key_prefix: prefix,
         name,
-        expires_at: expiresAt?.toISOString(),
+        expires_at: expiresAt,
       })
       .select('id, name, key_prefix, expires_at, is_active, created_at')
       .single();
@@ -79,24 +80,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // Log audit event
-    await supabase.rpc('log_audit_event', {
-      p_action: 'api_key_created',
-      p_resource_type: 'api_key',
-      p_resource_id: apiKey.id,
-      p_metadata: { name },
-    });
+    // Log audit event - skip if RPC doesn't exist
+    try {
+      await supabase.rpc('log_audit_event', {
+        p_action: 'api_key_created',
+        p_resource_type: 'api_key',
+        p_resource_id: apiKey.id,
+        p_metadata: { name },
+      } as any);
+    } catch (rpcError) {
+      // Ignore RPC errors for now
+      console.error('Audit log error:', rpcError);
+    }
 
     return NextResponse.json({
       api_key: apiKey,
       key, // Only returned once!
       warning: 'Save this key now. You won\'t be able to see it again.',
     }, { status: 201 });
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
     );
   }
 }
-
