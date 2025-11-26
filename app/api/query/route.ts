@@ -1,11 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { queryTOONPath } from '@/lib/toon/toonpath';
+import { validateApiKey, extractApiKeyFromRequest } from '@/lib/auth/apiKey';
+
+async function getUserId(request: NextRequest): Promise<string | null> {
+  // Try API key authentication first
+  const apiKey = extractApiKeyFromRequest(request);
+  if (apiKey) {
+    const userId = await validateApiKey(apiKey);
+    if (userId) return userId;
+  }
+
+  // Fall back to session authentication
+  const supabase = createServerClient();
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (!error && user) return user.id;
+
+  return null;
+}
 
 export async function POST(request: NextRequest) {
   try {
+    const userId = await getUserId(request);
+    const effectiveUserId = userId || '00000000-0000-0000-0000-000000000000';
+
     const supabase = createServerClient();
-    // Demo mode - no authentication required
     const body = await request.json();
     const { table_id, query, data } = body;
 
@@ -71,9 +90,8 @@ export async function POST(request: NextRequest) {
 
     // Log query history only for non-playground queries
     if (table_id && table_id !== 'playground') {
-      const demoUserId = '00000000-0000-0000-0000-000000000000';
       await supabase.from('query_history').insert({
-        user_id: demoUserId,
+        user_id: effectiveUserId,
         table_id,
         query_text: query,
         execution_time_ms: executionTime,
