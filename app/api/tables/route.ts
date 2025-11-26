@@ -1,17 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { decode } from '@/lib/toon';
+import { validateApiKey, extractApiKeyFromRequest } from '@/lib/auth/apiKey';
+
+async function getUserId(request: NextRequest): Promise<string | null> {
+  // Try API key authentication first
+  const apiKey = extractApiKeyFromRequest(request);
+  if (apiKey) {
+    const userId = await validateApiKey(apiKey);
+    if (userId) return userId;
+  }
+
+  // Fall back to session authentication
+  const supabase = createServerClient();
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (!error && user) return user.id;
+
+  return null;
+}
 
 export async function GET(request: NextRequest) {
   try {
+    const userId = await getUserId(request);
+
+    // Allow unauthenticated access for now (demo mode)
+    // In production, you might want to require authentication
     const supabase = createServerClient();
-    // For now, return all public tables or use a demo mode
-    // TODO: Add proper authentication
-    const { data: tables, error } = await ((supabase as any)
+
+    let query = (supabase as any)
       .from('toon_tables')
       .select('*')
       .order('created_at', { ascending: false })
-      .limit(100));
+      .limit(100);
+
+    // If authenticated, filter by user's tables
+    if (userId) {
+      query = query.eq('user_id', userId);
+    }
+
+    const { data: tables, error } = await query;
 
     if (error) {
       console.error('Database error:', error);
@@ -30,6 +57,11 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const userId = await getUserId(request);
+
+    // For table creation, allow demo mode if not authenticated
+    const effectiveUserId = userId || '00000000-0000-0000-0000-000000000000';
+
     const supabase = createServerClient();
     const body = await request.json();
     const { name, description, toon_content, delimiter = ',' } = body;
@@ -58,7 +90,7 @@ export async function POST(request: NextRequest) {
 
     // Handle both root arrays and objects containing arrays
     let dataArray: any[] = [];
-    
+
     if (Array.isArray(parsedData)) {
       dataArray = parsedData;
     } else if (typeof parsedData === 'object' && parsedData !== null) {
@@ -79,15 +111,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // For demo purposes, use a fixed user_id
-    // TODO: Replace with actual authentication
-    const demoUserId = '00000000-0000-0000-0000-000000000000';
-
     // Insert table
     const { data: table, error } = await ((supabase as any)
       .from('toon_tables')
       .insert({
-        user_id: demoUserId,
+        user_id: effectiveUserId,
         name,
         description,
         schema_fields: schemaFields,

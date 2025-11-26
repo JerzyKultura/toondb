@@ -158,13 +158,13 @@ export default function Home() {
               Documentation
             </Link>
             <Link
-              href="/dashboard"
+              href="/auth/login"
               className="px-4 py-2 text-primary-600 hover:text-primary-700 transition"
             >
               Sign In
             </Link>
             <Link
-              href="/dashboard"
+              href="/auth/signup"
               className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
             >
               Get Started

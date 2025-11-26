@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Database, Plus, Search, FileText, Activity, TrendingUp } from 'lucide-react';
+import { Database, Plus, Search, FileText, Activity, TrendingUp, LogOut, Key } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface Table {
   id: string;
@@ -14,6 +15,7 @@ interface Table {
 }
 
 export default function Dashboard() {
+  const router = useRouter();
   const [tables, setTables] = useState<Table[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,6 +23,16 @@ export default function Dashboard() {
   useEffect(() => {
     fetchTables();
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/signout', { method: 'POST' });
+      router.push('/auth/login');
+      router.refresh();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   const fetchTables = async () => {
     try {
@@ -75,10 +87,20 @@ export default function Dashboard() {
             href="/dashboard/api-keys"
             className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg transition"
           >
-            <TrendingUp className="w-5 h-5" />
+            <Key className="w-5 h-5" />
             <span className="font-medium">API Keys</span>
           </Link>
         </nav>
+
+        <div className="absolute bottom-6 left-6 right-6">
+          <button
+            onClick={handleLogout}
+            className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg transition w-full"
+          >
+            <LogOut className="w-5 h-5" />
+            <span className="font-medium">Logout</span>
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
