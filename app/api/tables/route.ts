@@ -23,22 +23,20 @@ export async function GET(request: NextRequest) {
   try {
     const userId = await getUserId(request);
 
-    // Allow unauthenticated access for now (demo mode)
-    // In production, you might want to require authentication
-    const supabase = createServerClient();
-
-    let query = (supabase as any)
-      .from('toon_tables')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(100);
-
-    // If authenticated, filter by user's tables
-    if (userId) {
-      query = query.eq('user_id', userId);
+    // Require authentication - users can only see their own tables
+    if (!userId) {
+      return NextResponse.json({ tables: [] });
     }
 
-    const { data: tables, error } = await query;
+    const supabase = createServerClient();
+
+    // Fetch only the authenticated user's tables
+    const { data: tables, error } = await ((supabase as any)
+      .from('toon_tables')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(100));
 
     if (error) {
       console.error('Database error:', error);
@@ -59,8 +57,13 @@ export async function POST(request: NextRequest) {
   try {
     const userId = await getUserId(request);
 
-    // For table creation, allow demo mode if not authenticated
-    const effectiveUserId = userId || '00000000-0000-0000-0000-000000000000';
+    // Require authentication for table creation
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Authentication required. Please sign in to create tables.' },
+        { status: 401 }
+      );
+    }
 
     const supabase = createServerClient();
     const body = await request.json();
@@ -111,11 +114,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Insert table
+    // Insert table with authenticated user's ID
     const { data: table, error } = await ((supabase as any)
       .from('toon_tables')
       .insert({
-        user_id: effectiveUserId,
+        user_id: userId,
         name,
         description,
         schema_fields: schemaFields,

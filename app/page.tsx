@@ -122,17 +122,25 @@ export default function Home() {
         }),
       });
 
+      if (response.status === 401) {
+        // Not authenticated - redirect to signup
+        alert('Please sign in or create an account to save your data');
+        window.location.href = '/auth/signup';
+        return;
+      }
+
       if (response.ok) {
         const result = await response.json();
         const tableId = result.table.id;
         const link = `${window.location.origin}/dashboard/tables/${tableId}`;
         setCreatedLink(link);
-        
+
         // Copy to clipboard
         await navigator.clipboard.writeText(link);
         alert('Database created! Link copied to clipboard.');
       } else {
-        alert('Failed to create database');
+        const data = await response.json();
+        alert('Failed to create database: ' + (data.error || 'Unknown error'));
       }
     } catch (err) {
       alert('Error creating database: ' + (err instanceof Error ? err.message : 'Unknown error'));

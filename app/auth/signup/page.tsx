@@ -68,8 +68,11 @@ export default function SignupPage() {
 
             {success && (
               <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-sm text-green-800">
-                  Account created successfully! Redirecting to login...
+                <p className="text-sm text-green-800 font-semibold mb-1">
+                  Account created successfully!
+                </p>
+                <p className="text-xs text-green-700">
+                  Your default API key has been generated. Check your API Keys page after logging in. Redirecting...
                 </p>
               </div>
             )}

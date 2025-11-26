@@ -22,7 +22,6 @@ async function getUserId(request: NextRequest): Promise<string | null> {
 export async function POST(request: NextRequest) {
   try {
     const userId = await getUserId(request);
-    const effectiveUserId = userId || '00000000-0000-0000-0000-000000000000';
 
     const supabase = createServerClient();
     const body = await request.json();
@@ -88,10 +87,10 @@ export async function POST(request: NextRequest) {
 
     const executionTime = Date.now() - startTime;
 
-    // Log query history only for non-playground queries
-    if (table_id && table_id !== 'playground') {
+    // Log query history only for authenticated users with non-playground queries
+    if (userId && table_id && table_id !== 'playground') {
       await supabase.from('query_history').insert({
-        user_id: effectiveUserId,
+        user_id: userId,
         table_id,
         query_text: query,
         execution_time_ms: executionTime,

@@ -14,14 +14,22 @@ interface Table {
   updated_at: string;
 }
 
+interface User {
+  id: string;
+  email: string;
+  full_name: string | null;
+}
+
 export default function Dashboard() {
   const router = useRouter();
   const [tables, setTables] = useState<Table[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchTables();
+    fetchUser();
   }, []);
 
   const handleLogout = async () => {
@@ -31,6 +39,18 @@ export default function Dashboard() {
       router.refresh();
     } catch (error) {
       console.error('Logout error:', error);
+    }
+  };
+
+  const fetchUser = async () => {
+    try {
+      const response = await fetch('/api/user');
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
+      }
+    } catch (error) {
+      console.error('Error fetching user:', error);
     }
   };
 
@@ -106,11 +126,21 @@ export default function Dashboard() {
       {/* Main Content */}
       <main className="ml-64 p-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Tables</h1>
-          <p className="text-gray-600">
-            Manage your TOON datasets and tables
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Tables</h1>
+            <p className="text-gray-600">
+              Manage your TOON datasets and tables
+            </p>
+          </div>
+          {user && (
+            <div className="text-right">
+              <p className="text-lg font-semibold text-gray-900">
+                Hi, {user.full_name ? user.full_name.split(' ')[0] : user.email?.split('@')[0]}!
+              </p>
+              <p className="text-sm text-gray-500">{user.email}</p>
+            </div>
+          )}
         </div>
 
         {/* Stats Cards */}
